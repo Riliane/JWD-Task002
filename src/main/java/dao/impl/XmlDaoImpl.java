@@ -10,8 +10,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class XmlDaoImpl implements XmlDao{
-    final String SEPARATING_PATTERN = "<[^<>]+>|<!--|-->"; //this pattern finds tags in <> and comment openers and closers
-    final String TAG_PATTERN = "<[^<>=\"\\s]+(\\s+[^<>=\"\\s]+\\s*=\\s*\"[^<>\"]+\")*>";
     @Override
     public TreeNode parseXML(String filename) throws XmlParseException{
         BufferedReader in = null;
@@ -22,7 +20,7 @@ public class XmlDaoImpl implements XmlDao{
                 throw new FileNotFoundException();
             } //put this in services
             in = new BufferedReader(new FileReader(file.getAbsoluteFile()));
-            StringSplitter splitter = new StringSplitter(SEPARATING_PATTERN, "", "");
+            StringSplitter splitter = new StringSplitter();
             XmlArrayParser parser = new XmlArrayParser();
 
             String fileString = in.readLine();
@@ -48,8 +46,6 @@ public class XmlDaoImpl implements XmlDao{
                 }
             }
         }
-
-
         return root;
     }
 }

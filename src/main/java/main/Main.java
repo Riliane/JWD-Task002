@@ -14,7 +14,8 @@ public class Main {
         XmlDaoImpl dao = new XmlDaoImpl();
         try {
             TreeNode tree = dao.parseXML(path);
-            tree.print();
+            if (tree != null) {tree.print();}
+            else {System.out.println("Something went wrong.");}
         }
         catch (XmlParseException e){
             System.out.print("The file is badly formatted.");

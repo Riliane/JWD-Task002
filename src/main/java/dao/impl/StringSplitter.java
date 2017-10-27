@@ -6,12 +6,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringSplitter {
-    String separatingRegex;
+    final static String SEPARATING_PATTERN = "<[^<>]+>|<!--|-->"; //this pattern finds tags in <> and comment openers and closers
     Pattern separatingPattern;
 
-    StringSplitter(String general, String tag, String comment){
-        separatingRegex = general;
-        separatingPattern = Pattern.compile(separatingRegex);
+    StringSplitter(){
+        separatingPattern = Pattern.compile(SEPARATING_PATTERN);
     }
 
     public String[] split (String str){
