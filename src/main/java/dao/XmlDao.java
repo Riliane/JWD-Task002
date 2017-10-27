@@ -1,9 +1,8 @@
 package dao;
 
+import dao.impl.XmlParseException;
 import entity.TreeNode;
 
-import java.io.IOException;
-
 public interface XmlDao {
-    public TreeNode parseXML(String filename);
+    public TreeNode parseXML(String filename) throws XmlParseException;
 }

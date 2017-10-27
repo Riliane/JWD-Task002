@@ -10,7 +10,9 @@ public class TreeNode {
     private TreeNode parent;
     List<TreeNode> children = new ArrayList<TreeNode>();
 
-    public TreeNode(){}
+    public TreeNode(){
+        value = "";
+    }
 
     public void addChild (TreeNode node){
         node.setParent(this);

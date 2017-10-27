@@ -2,40 +2,38 @@ package dao.impl;
 
 import entity.TreeNode;
 
-import java.text.ParseException;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.regex.Pattern;
 
 public class XmlArrayParser {
-    String tagPattern;
-    TreeNode root = null;
+    final String TAG_PATTERN = "<[^<>=\"\\s]+(\\s+[^<>=\"\\s]+\\s*=\\s*\"[^<>\"]+\")*>";
     TreeNode current = null;
     LinkedList<String> tags = new LinkedList<>();
-    boolean isComment;
-    String remainder = "";
+    boolean isComment = false;
 
-    public void parseArray(String[] array) throws XmlParseException{
+    public void parseArray(String[] array) throws XmlParseException {
         for (String element : array) {
-            if (Pattern.matches("<!--", element)) {
+            if (Pattern.matches("<!--", element)) { //opening comment
                 isComment = true;
-            } else if (Pattern.matches("-->", element)) {
+            } else if (Pattern.matches("-->", element)) { //closing comment
                 isComment = false;
-            } else if (element.isEmpty() || isComment) {
+            } else if (Pattern.matches("\\s*", element) || isComment ||Pattern.matches("<!--.*-->", element)) { //empty or all space split result, anything inside a comment or single line comment
                 continue;
-            } else if (Pattern.matches("<[^<>]+>", element)) {
-                if (Pattern.matches("</[^<>\\s]+>", element)) {//if it's a good closing tag
-                    String name = element.substring(2, element.length()-1);
+            } else if (Pattern.matches("<[^<>]+>", element)) {//any tag
+                if (Pattern.matches("</[^<>\\s]+>", element)) {//a good closing tag
+                    String name = element.substring(2, element.length() - 1);
                     if (!name.equalsIgnoreCase(tags.getLast())) {
-                    throw new XmlParseException();
+                        throw new XmlParseException();
                     }
                     tags.removeLast();
                     TreeNode parent = current.getParent();
-                    if (parent != null){current = parent;}
+                    if (parent != null) {
+                        current = parent;
+                    }
 
-                } else if (!Pattern.matches(tagPattern, element)) { //if it's not a good opening tag either
+                } else if (!Pattern.matches(TAG_PATTERN, element)) { //not a good closing tag but not a good opening tag either
                     throw new XmlParseException();
-                } else {
+                } else { //good opening tag
                     String[] properties = element.substring(1, element.length() - 1).split("\\s");
                     TreeNode node = new TreeNode();
                     if (current != null) {
@@ -50,8 +48,15 @@ public class XmlArrayParser {
                         current.addProperty(parts[0], parts[1]);
                     }
                 }
+            } else { //text
+                current.setValue(current.getValue().concat(element));
             }
-
         }
+    }
+    public TreeNode getParsedTree() throws XmlParseException{
+        if (!tags.isEmpty()) {
+            throw new XmlParseException();
+        }
+        return current;
     }
 }

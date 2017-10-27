@@ -22,17 +22,11 @@ public class StringSplitter {
         while(m.find())
         {
             String token = m.group( 0 );
-            String before = str.substring(lastPosition, m.start()-1);
+            String before = str.substring(lastPosition, m.start());
             tokens.add(before);
             tokens.add(token);
-            lastPosition = m.end()+1;
+            lastPosition = m.end();
         }
-        /*int length = tokens.size();
-        for (int i = 0; i < length; i++){
-            if (tokens.get(i).charAt(0) == '<' && !Pattern.matches(tagRegex, tokens.get(i))){ //if it's a tag but a badly formatted one
-                //throw exception
-            }
-        }*/
-        return (String[])tokens.toArray();
+        return tokens.toArray(new String[0]);
     }
 }
