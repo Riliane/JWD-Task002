@@ -1,5 +1,7 @@
 package main;
 
+import dao.DAOFactory;
+import dao.XmlDao;
 import dao.impl.XmlDaoImpl;
 import dao.impl.XmlParseException;
 import entity.TreeNode;
@@ -11,7 +13,8 @@ public class Main {
         System.out.print("Enter file path:");
         Scanner sc=new Scanner(System.in);
         String path = sc.nextLine();
-        XmlDaoImpl dao = new XmlDaoImpl();
+        DAOFactory factory=DAOFactory.getInstance();
+        XmlDao dao = factory.getXmlDao();
         try {
             TreeNode tree = dao.parseXML(path);
             if (tree != null) {tree.print();}
