@@ -2,7 +2,9 @@ package dao.impl;
 
 import entity.TreeNode;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class XmlArrayParser {
@@ -33,7 +35,17 @@ public class XmlArrayParser {
                 } else if (!Pattern.matches(OPENING_TAG_PATTERN, element)) { //not a good closing tag but not a good opening tag either
                     throw new XmlParseException();
                 } else { //good opening tag
-                    String[] properties = element.substring(1, element.length() - 1).split("\\s");
+
+                    String tag = element.substring(1, element.length() - 1);
+                    Pattern p = Pattern.compile("[^\"\\s]+=\"[^\"]+\"|[^\\s\"]+");
+                    Matcher m = p.matcher(tag);
+                    ArrayList<String> tokens = new ArrayList<>();
+                    while(m.find())
+                    {
+                        String token = m.group( 0 );
+                        tokens.add(token);
+                    }
+                    String[] properties = tokens.toArray(new String[0]);
                     openTagByNameProperties(properties);
                 }
             } else { //text

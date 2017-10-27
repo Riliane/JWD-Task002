@@ -9,7 +9,7 @@ public class StringSplitter {
     private final static String SEPARATING_PATTERN = "<[^<>]+>|<!--|-->"; //this pattern finds tags in <> and comment openers and closers
     private Pattern separatingPattern;
 
-    StringSplitter(){
+    public StringSplitter(){
         separatingPattern = Pattern.compile(SEPARATING_PATTERN);
     }
 
