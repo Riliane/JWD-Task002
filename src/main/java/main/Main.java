@@ -2,7 +2,6 @@ package main;
 
 import dao.DAOFactory;
 import dao.XmlDao;
-import dao.impl.XmlDaoImpl;
 import dao.impl.XmlParseException;
 import entity.TreeNode;
 

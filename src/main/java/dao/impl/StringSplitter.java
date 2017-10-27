@@ -6,8 +6,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringSplitter {
-    final static String SEPARATING_PATTERN = "<[^<>]+>|<!--|-->"; //this pattern finds tags in <> and comment openers and closers
-    Pattern separatingPattern;
+    private final static String SEPARATING_PATTERN = "<[^<>]+>|<!--|-->"; //this pattern finds tags in <> and comment openers and closers
+    private Pattern separatingPattern;
 
     StringSplitter(){
         separatingPattern = Pattern.compile(SEPARATING_PATTERN);

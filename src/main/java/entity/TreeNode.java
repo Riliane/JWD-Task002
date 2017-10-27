@@ -5,10 +5,10 @@ import java.util.*;
 public class TreeNode {
     static final String UNIT_OF_SPACING = "    ";
     private String name;
-    Map<String, String> properties = new HashMap<String, String>();
+    private Map<String, String> properties = new HashMap<String, String>();
     private String value;
     private TreeNode parent;
-    List<TreeNode> children = new ArrayList<TreeNode>();
+    private List<TreeNode> children = new ArrayList<TreeNode>();
 
     public TreeNode(){
         value = "";

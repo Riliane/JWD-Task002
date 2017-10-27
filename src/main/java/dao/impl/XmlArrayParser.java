@@ -6,15 +6,16 @@ import java.util.LinkedList;
 import java.util.regex.Pattern;
 
 public class XmlArrayParser {
-    static final String ANY_TAG_PATTERN = "<[^<>]+>";
-    static final String OPENING_TAG_PATTERN = "<[^<>=\"\\s]+(\\s+[^<>=\"\\s]+\\s*=\\s*\"[^<>\"]+\")*>";
-    static final String CLOSING_TAG_PATTERN = "</[^<>\\s]+>";
-    static final String OPEN_COMMENT_PATTERN = "<!--";
-    static final String CLOSE_COMMENT_PATTERN = "-->";
-    static final String LINE_COMMENT_PATTERN = "<!--.*-->";
-    TreeNode current = null;
-    LinkedList<String> tags = new LinkedList<>();
-    boolean isComment = false;
+    private static final String ANY_TAG_PATTERN = "<[^<>]+>";
+    private static final String OPENING_TAG_PATTERN = "<[^<>=\"\\s]+(\\s+[^<>=\"\\s]+\\s*=\\s*\"[^<>\"]+\")*>";
+    private static final String CLOSING_TAG_PATTERN = "</[^<>\\s]+>";
+    private static final String OPEN_COMMENT_PATTERN = "<!--";
+    private static final String CLOSE_COMMENT_PATTERN = "-->";
+    private static final String LINE_COMMENT_PATTERN = "<!--.*-->";
+    private static final String DECLARATION_PATTERN = "<\\?.*\\?>";
+    private TreeNode current = null;
+    private LinkedList<String> tags = new LinkedList<>();
+    private boolean isComment = false;
 
     public void parseArray(String[] array) throws XmlParseException {
         for (String element : array) {
@@ -22,7 +23,7 @@ public class XmlArrayParser {
                 isComment = true;
             } else if (Pattern.matches(CLOSE_COMMENT_PATTERN, element)) { //closing comment
                 isComment = false;
-            } else if (Pattern.matches("\\s*", element) || isComment ||Pattern.matches(LINE_COMMENT_PATTERN, element)) { //empty or all space split result, anything inside a comment or single line comment
+            } else if (isComment || skipped(element)) { //empty or all space split result, anything inside a comment or single line comment
                 continue;
             } else if (Pattern.matches(ANY_TAG_PATTERN, element)) {//any tag
                 if (Pattern.matches(CLOSING_TAG_PATTERN, element)) {//a good closing tag
@@ -45,6 +46,12 @@ public class XmlArrayParser {
             throw new XmlParseException();
         }
         return current;
+    }
+    private boolean skipped(String element){//comments, XML version declaration and
+        if (Pattern.matches("\\s*", element) || Pattern.matches(LINE_COMMENT_PATTERN, element) || Pattern.matches(DECLARATION_PATTERN, element)){
+            return true;
+        }
+        else return false;
     }
     private void openTagByNameProperties(String[] properties){
         TreeNode node = new TreeNode();
